@@ -180,7 +180,6 @@ def mixColumns(bytes_matrix, inv = False):
     return new_matrix
 
 def encrypt(message, key):
-    message = message.encode('utf-8').hex()
     if len(message) % 32 != 0:
         length = 32 - (len(message) % 32)
         message += length * "0"
