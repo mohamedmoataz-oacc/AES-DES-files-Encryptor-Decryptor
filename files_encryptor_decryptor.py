@@ -39,11 +39,11 @@ class FilesDecryptor:
 
     def generateFile(self):
         with open(self.name, 'rb') as f:
-            self.output = bytes.hex(f.readline())[:-2]
+            self.name = bytes.hex(f.readline())[:-2]
             f = bytes.hex(f.read())
 
         if self.output is None:
-            self.output = self.removeNullCharacters(decrypt(self.output, self.key))
+            self.output = self.removeNullCharacters(decrypt(self.name, self.key))
             self.output = bytes.fromhex(self.output).decode('utf-8')
             self.output = self.output.split('.')
             self.output[0] = self.output[0] + '(1)'
