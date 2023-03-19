@@ -3,10 +3,13 @@ from aes import encrypt, decrypt
 import argparse
 
 class FilesEncryptor:
-    def __init__(self, name, output_name):
+    def __init__(self, name, output_name = 'enc'):
         self.key = None
         self.name = name
         self.output = output_name
+
+    def set_output(self, output):
+        self.output = output
     
     def set_key(self, key):
         self.key = key
