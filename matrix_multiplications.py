@@ -116,4 +116,4 @@ multiplications = {
 
 def mixColumnsMultiplication(table, num):
     global multiplications
-    return bin(multiplications[table][int(num, 16)])[2:].zfill(8)
+    return multiplications[table][num]
