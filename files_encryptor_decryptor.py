@@ -1,5 +1,6 @@
 import time
-from aes import encrypt, decrypt
+import aes
+import des
 import argparse
 
 class FilesEncryptor:
@@ -17,6 +18,9 @@ class FilesEncryptor:
     def generateFile(self):
         with open(self.name, 'rb') as f:
             f = bytes.hex(f.read())
+
+        if len(self.key) == 16: encrypt = des.encrypt
+        else: encrypt = aes.encrypt
 
         self.name = encrypt(self.name.encode('utf-8').hex(), self.key)
         enc = encrypt(f, self.key)
@@ -42,6 +46,9 @@ class FilesDecryptor:
             self.name = bytes.hex(f.readline())[:-2]
             f = bytes.hex(f.read())
 
+        if len(self.key) == 16: decrypt = des.decrypt
+        else: decrypt = aes.decrypt
+
         if self.output is None:
             self.output = self.removeNullCharacters(decrypt(self.name, self.key))
             self.output = bytes.fromhex(self.output).decode('utf-8')
@@ -62,7 +69,7 @@ class FilesDecryptor:
 parser = argparse.ArgumentParser()
 parser.add_argument("-e", "--encrypt", help = "encrypt given file")
 parser.add_argument("-d", "--decrypt", help = "decrypt given file")
-parser.add_argument("-k", "--key", required = True, help = "key for encryption/decryption")
+parser.add_argument("-k", "--key", required = True, help = "key for encryption/decryption, must be 16, 32, 64 or 48 hexadecimal characters.")
 parser.add_argument("-o", "--output", help = "name of output file")
 args = parser.parse_args()
 
@@ -81,12 +88,12 @@ if passed_args:
     key = args.key
     try: int(key, 16)
     except ValueError:
-        print("Key is not valid. Key must be 32, 64 or 48 hexadecimal characters.")
+        print("Key is not valid. Key must be in hexadecimal.")
         valid = False
 
     valid = True
-    if len(key) != 32 and len(key) != 64 and len(key) != 48:
-        print("Key is not valid")
+    if len(key) != 16 and len(key) != 32 and len(key) != 64 and len(key) != 48:
+        print("Key is not valid. Key must be 16, 32, 64 or 48 hexadecimal characters.")
         valid = False
 
     if valid:
